@@ -1,0 +1,44 @@
+# !/bin/bash
+
+gcc -O3 -Wall -Werror lab1.c -o lab1-seq -lm
+gcc -O3 -Wall -Werror -floop-parallelize-all -ftree-parallelize-loops=2 lab1.c -o lab1-par-2 -lm
+gcc -O3 -Wall -Werror -floop-parallelize-all -ftree-parallelize-loops=4 lab1.c -o lab1-par-4 -lm
+gcc -O3 -Wall -Werror -floop-parallelize-all -ftree-parallelize-loops=8 lab1.c -o lab1-par-8 -lm
+gcc -O3 -Wall -Werror -floop-parallelize-all -ftree-parallelize-loops=16 lab1.c -o lab1-par-16 -lm
+
+index=$1
+
+let "step=($2 - $1) / 10"
+echo $step
+
+while [[ $index -lt $2 ]] 
+do
+
+./lab1-seq $index
+cat work_time.txt >> seq.txt
+cat result_sum.txt >> res_sum_seq.txt
+
+./lab1-par-2 $index
+cat work_time.txt >> par-2.txt
+cat result_sum.txt >> res_sum_par-2.txt
+
+./lab1-par-4 $index
+cat work_time.txt >> par-4.txt
+cat result_sum.txt >> res_sum_par-4.txt
+
+./lab1-par-8 $index
+cat work_time.txt >> par-8.txt
+cat result_sum.txt >> res_sum_par-8.txt
+
+./lab1-par-16 $index
+cat work_time.txt >> par-16.txt
+cat result_sum.txt >> res_sum_par-16.txt
+
+echo 
+echo
+
+let "index=index+(step)"
+
+done
+
+
